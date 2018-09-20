@@ -35,9 +35,7 @@ class StaffCatEnum(enum.Enum):
 class Candidate(Base):
     __tablename__ = 'candidate'
     id = sa.Column(sa.Integer, primary_key=True)
-    fname = sa.Column(sa.String)
-    iname = sa.Column(sa.String)
-    oname = sa.Column(sa.String)
+    fio = sa.Column(sa.String)
     gender = sa.Column(sa.Enum(GenderEnum))
     birth = sa.Column(sa.Date)
     deputat = sa.Column(sa.Boolean)
@@ -51,13 +49,20 @@ class Position(Base):
                            uselist=False, back_populates="position")
 
 
-Employee = sa.Table(
-    'employee', Base.metadata,
-    sa.Column('id', sa.Integer, primary_key=True),
-    sa.Column('tab_num', sa.String, index=True),
-    sa.Column("candidate_id", sa.ForeignKey(Candidate.id)),
-    sa.Column("position_id", sa.ForeignKey(Position.id)),
-)
+class Employee(Base):
+    __tablename__ = 'employee'
+    id = sa.Column(sa.Integer, primary_key=True)
+    tab_num = sa.Column(sa.String, index=True)
+    candidate_id = sa.Column(sa.ForeignKey(Candidate.id))
+    position_id = sa.Column(sa.ForeignKey(Position.id))
+
+# Employee = sa.Table(
+#     'employee', Base.metadata,
+#     sa.Column('id', sa.Integer, primary_key=True),
+#     sa.Column('tab_num', sa.String, index=True),
+#     sa.Column("candidate_id", sa.ForeignKey(Candidate.id)),
+#     sa.Column("position_id", sa.ForeignKey(Position.id)),
+# )
 
 
 class PositionDetails(Base):
@@ -69,8 +74,8 @@ class PositionDetails(Base):
     position = relationship("Position", uselist=False, back_populates="details")
 
 
-if os.path.exists("some.db"):
-    os.remove("some.db")
-engine = sa.create_engine("sqlite:///some.db")
-Base.metadata.create_all(engine)
+def create_tables(engine):
+    if os.path.exists("some.db"):
+        os.remove("some.db")
+    Base.metadata.create_all(engine)
 
