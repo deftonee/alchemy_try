@@ -39,6 +39,7 @@ class Candidate(Base):
     gender = sa.Column(sa.Enum(GenderEnum))
     birth = sa.Column(sa.Date)
     deputat = sa.Column(sa.Boolean)
+    employee = relationship("Employee", back_populates="candidate")
 
 
 class Position(Base):
@@ -46,7 +47,8 @@ class Position(Base):
     id = sa.Column(sa.Integer, primary_key=True)
     name = sa.Column(sa.String, nullable=False)
     details = relationship("PositionDetails",
-                           uselist=False, back_populates="position")
+                           uselist=False, back_populates="position",
+                           lazy='joined')
 
 
 class Employee(Base):
@@ -55,6 +57,7 @@ class Employee(Base):
     tab_num = sa.Column(sa.String, index=True)
     candidate_id = sa.Column(sa.ForeignKey(Candidate.id))
     position_id = sa.Column(sa.ForeignKey(Position.id))
+    candidate = relationship("Candidate", back_populates="employee")
 
 # Employee = sa.Table(
 #     'employee', Base.metadata,

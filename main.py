@@ -1,10 +1,11 @@
 import sqlalchemy as sa
 
-from data import fill_db
+from data import insert, select, update
 from models import create_tables
-from queries import make_queries
 
 engine = sa.create_engine("sqlite:///some.db")
 create_tables(engine)
-fill_db(engine)
-make_queries(engine)
+insert(engine)
+select(engine)
+update(engine)
+
