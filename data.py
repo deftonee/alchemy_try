@@ -12,17 +12,18 @@ CANDIDATE_NUMBER = 100
 POSITION_NUMBER = 30
 
 
-def print_orm_result(query, session=None):
+def print_orm_result(query, session):
     print(query)
-    if session:
-        print(tuple(query))
+    print(tuple(query))
 
 
-def print_core_result(query, session=None):
+def print_core_result(query, session):
     print(query)
-    if session:
-        result = session.execute(query)
+    result = session.execute(query)
+    try:
         print('(%s)' % ', '.join((str(tuple(x.values())) for x in result)))
+    except:
+        pass
 
 
 def insert(engine):
@@ -126,7 +127,7 @@ def update(engine):
         sa.func.length(Position.name) == subquery
     )
 
-    print_orm_result(query)
+    print_orm_result(query, session)
 
     for p in query:
         p.details.salary += 100
@@ -141,6 +142,16 @@ def update(engine):
         PositionDetails.id == subquery
     )
 
-    print_core_result(query)
+    print_core_result(query, session)
+
+    print('===================================================================')
+
+    query = sa.update(
+        Candidate
+    ).values(
+        {Candidate.fio: sa.func.upper(Candidate.fio)}
+    )
+
+    print_core_result(query, session)
 
     session.commit()
