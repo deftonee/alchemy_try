@@ -59,14 +59,6 @@ class Employee(Base):
     position_id = sa.Column(sa.ForeignKey(Position.id))
     candidate = relationship("Candidate", back_populates="employee")
 
-# Employee = sa.Table(
-#     'employee', Base.metadata,
-#     sa.Column('id', sa.Integer, primary_key=True),
-#     sa.Column('tab_num', sa.String, index=True),
-#     sa.Column("candidate_id", sa.ForeignKey(Candidate.id)),
-#     sa.Column("position_id", sa.ForeignKey(Position.id)),
-# )
-
 
 class PositionDetails(Base):
     __tablename__ = 'position_details'
